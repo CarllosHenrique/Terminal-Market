@@ -5,7 +5,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        double saldo = 1000;
+        double saldo = 500;
         Dictionary<string, double> acoes = new Dictionary<string, double>()
         {
             {"ABEV3", 13.43},
@@ -20,6 +20,7 @@ class Program
         string nome = Console.ReadLine();
         Console.WriteLine("Bem-vindo ao Compass Market {0}", nome);
         Console.WriteLine("Você tem R${0} em dinheiro para investir.", saldo);
+        Console.WriteLine("Seu objetivo é duplicar seu patrimonio para ganhar!");
 
         while (true)
         {
@@ -28,12 +29,19 @@ class Program
             {
                 Console.WriteLine("{0} - Preço: R${1}", acao.Key, acao.Value);
             }
-            Console.Write("\nDigite o nome da empresa que deseja comprar ações: ");
+            Console.Write("\nDigite o nome da empresa que deseja comprar ações ou (SALDO) para ver seu saldo: ");
             string escolha = Console.ReadLine();
-            if (escolha.ToLower() == "sair")
+            if (saldo >= 1000)
             {
                 break;
             }
+
+            if(escolha.ToLower() == "saldo")
+            {
+              Console.WriteLine("Seu saldo atual é R${0}", saldo);
+              continue;
+            }
+            
             if (!acoes.ContainsKey(escolha))
             {
                 Console.WriteLine("Empresa inválida. Tente novamente.");
@@ -58,7 +66,27 @@ class Program
                 acoes[escolha] = Math.Round(acoes[escolha] * (1 + variacao), 2);
                 Console.WriteLine("Preço da ação da {0} atualizado para R${1}", escolha, acoes[escolha]);
 
-                
+                Console.WriteLine("Você deseja vender a quantia de {0} açoẽs da empresa {1}? (SIM) ou (NÃO)", qtd, escolha);
+                string querVenderAc = Console.ReadLine();
+
+                if(querVenderAc.ToLower() == "sim")
+                {
+                  Console.WriteLine("Digite a quantidade que você deseja vender:");
+                  int qtdDeAc = int.Parse(Console.ReadLine());
+                  int tot = qtd - qtdDeAc;
+
+                  if(qtd < qtdDeAc)
+                  {
+                    Console.WriteLine("Vocẽ não pode vender uma quantia maior que possui!");
+                    continue;
+                  }
+
+                  saldo = saldo + (tot * acoes[escolha]);
+                  double faturamento = tot * acoes[escolha];
+                  Console.WriteLine("Vocẽ vendeu {0} açoẽs e faturou R${1}", qtdDeAc , faturamento);
+                }
+
+          
             }
             catch (System.SystemException)
             {
@@ -66,7 +94,7 @@ class Program
             }
         }
 
-        Console.WriteLine("Transações encerradas. Obrigado por jogar!");
+        Console.WriteLine("Você duplicou seu patrimonio parabens, transações encerradas. Obrigado por jogar!");
     }
 }
 
